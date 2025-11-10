@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>签名测试工具 - EdgeOne 文件代理</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-group {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #007cba;
+        }
+        textarea {
+            font-family: monospace;
+            resize: vertical;
+            min-height: 80px;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007cba;
+            display: none;
+        }
+        .error {
+            background: #fdf4f4;
+            border-left-color: #e53e3e;
+            color: #c53030;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .success {
+            color: #38a169;
+            font-weight: 600;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #007cba;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .button-group button {
+            width: auto;
+            flex: 1;
+        }
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .nav-button:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="nav-button">← 返回首页</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔐 签名测试工具</h1>
+            <p>生成用于 EdgeOne 文件代理服务的有效签名</p>
+        </div>
+
+        <div class="form-group">
+            <label for="filePath">📁 文件路径:</label>
+            <input type="text" id="filePath" value="/test-file.txt" placeholder="例如: /images/photo.jpg">
+            <small>注意：路径应以斜杠 / 开头</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="expire">⏰ 过期时间 (秒):</label>
+            <input type="number" id="expire" value="3600" min="1">
+            <small>签名有效时长，从当前时间算起</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="token">🔑 API Token:</label>
+            <textarea id="token" placeholder="请输入您的 API Token...">openlist-c041eb60-2278-4261-9681-b047fcda07d5kSCcjibUQ1WOchgaInwPXCnDtHU0qwyqqGEdYVtDFvaP6gAbk5UO3sTyOfYugiJs</textarea>
+        </div>
+        
+        <button onclick="generateSignature()" id="generateBtn">生成签名</button>
+        
+        <div class="loading" id="loading">
+            ⏳ 正在生成签名...
+        </div>
+
+        <div class="result" id="result">
+            <h3>✨ 生成的签名:</h3>
+            <div class="code" id="signatureResult"></div>
+            
+            <h3>🔗 测试 URL:</h3>
+            <div class="code" id="testUrl"></div>
+            
+            <p class="success">✅ 签名生成成功！您可以复制上面的 URL 进行测试。</p>
+            
+            <div class="button-group">
+                <button onclick="testGeneratedUrl()" style="background: #38a169;">测试生成的 URL</button>
+                <button onclick="copyTestUrl()" style="background: #6b46c1;">复制测试 URL</button>
+            </div>
+        </div>
+
+        <div class="result error" id="errorResult" style="display: none;">
+            <h3>❌ 错误信息:</h3>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        async function generateSignature() {
+            // 重置显示状态
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('errorResult').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('generateBtn').disabled = true;
+
+            const filePath = document.getElementById('filePath').value.trim();
+            const expire = parseInt(document.getElementById('expire').value);
+            const token = document.getElementById('token').value.trim();
+            
+            // 基础验证
+            if (!filePath) {
+                showError('请输入文件路径');
+                return;
+            }
+            if (!filePath.startsWith('/')) {
+                showError('文件路径必须以斜杠 / 开头');
+                return;
+            }
+            if (!expire || expire <= 0) {
+                showError('请输入有效的过期时间');
+                return;
+            }
+            if (!token) {
+                showError('请输入 API Token');
+                return;
+            }
+
+            try {
+                console.log('开始生成签名，参数:', { filePath, expire, token: token.substring(0, 10) + '...' });
+
+                // 计算过期时间戳（当前时间 + 过期秒数）
+                const expireTimestamp = Math.floor(Date.now() / 1000) + expire;
+                console.log('过期时间戳:', expireTimestamp);
+
+                // 准备签名数据
+                const dataToSign = filePath + ":" + expireTimestamp;
+                console.log('待签名数据:', dataToSign);
+
+                // 编码密钥和数据
+                const encoder = new TextEncoder();
+                const keyData = encoder.encode(token);
+                const data = encoder.encode(dataToSign);
+
+                console.log('导入密钥...');
+                
+                // 导入密钥
+                const key = await crypto.subtle.importKey(
+                    "raw",
+                    keyData,
+                    { 
+                        name: "HMAC",
+                        hash: { name: "SHA-256" }
+                    },
+                    false,
+                    ["sign"]
+                );
+
+                console.log('生成签名...');
+                
+                // 生成签名
+                const signature = await crypto.subtle.sign(
+                    "HMAC",
+                    key,
+                    data
+                );
+
+                console.log('签名生成完成，处理结果...');
+
+                // 将签名转换为 Base64
+                const signatureArray = new Uint8Array(signature);
+                let binary = '';
+                
+                // 手动构建 Base64 字符串
+                for (let i = 0; i < signatureArray.length; i++) {
+                    binary += String.fromCharCode(signatureArray[i]);
+                }
+                
+                const base64Encoded = btoa(binary)
+                    .replace(/\+/g, "-")
+                    .replace(/\//g, "_")
+                    .replace(/=+$/, ""); // 移除尾部等号
+
+                const fullSignature = base64Encoded + ":" + expireTimestamp;
+                
+                console.log('生成的完整签名:', fullSignature);
+
+                // 显示结果
+                document.getElementById('signatureResult').textContent = fullSignature;
+                
+                const testUrl = window.location.origin + '/api' + filePath + '?sign=' + encodeURIComponent(fullSignature);
+                document.getElementById('testUrl').textContent = testUrl;
+                document.getElementById('testUrl').dataset.url = testUrl;
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                
+            } catch (error) {
+                console.error('生成签名时出错:', error);
+                showError('生成签名时出错: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('generateBtn').disabled = false;
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('generateBtn').disabled = false;
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorResult').style.display = 'block';
+        }
+
+        async function testGeneratedUrl() {
+            const testUrl = document.getElementById('testUrl').dataset.url;
+            if (!testUrl) {
+                alert('请先生成测试 URL');
+                return;
+            }
+            
+            try {
+                const response = await fetch(testUrl);
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('✅ 测试成功！服务器返回: ' + JSON.stringify(result, null, 2));
+                } else {
+                    alert('❌ 测试失败！状态码: ' + response.status + ', 错误: ' + (result.message || '未知错误'));
+                }
+            } catch (error) {
+                alert('🚫 请求失败: ' + error.message);
+            }
+        }
+
+        async function copyTestUrl() {
+            const testUrl = document.getElementById('testUrl').dataset.url;
+            if (!testUrl) {
+                alert('没有可复制的 URL');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(testUrl);
+                alert('✅ URL 已复制到剪贴板！');
+            } catch (error) {
+                // 降级方案
+                const textArea = document.createElement('textarea');
+                textArea.value = testUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('✅ URL 已复制到剪贴板！');
+            }
+        }
+    </script>
+</body>
+</html>
