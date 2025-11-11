@@ -2,14 +2,31 @@
  * API endpoint for providing real EdgeOne metrics data
  */
 
+import { getRealEdgeOneMetrics } from './real-metrics.js';
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   
   try {
-    // 获取真实监控数据
-    const realMetrics = await getRealEdgeOneMetrics(env);
+    // 检查是否配置了真实 API 凭证
+    const hasRealCredentials = env.EDGEONE_SECRET_ID && env.EDGEONE_SECRET_KEY && env.EDGEONE_SITE_ID;
     
-    return new Response(JSON.stringify(realMetrics), {
+    let metrics;
+    
+    if (hasRealCredentials) {
+      // 尝试获取真实数据
+      try {
+        metrics = await getRealEdgeOneMetrics(env);
+      } catch (realError) {
+        console.warn('真实数据获取失败，使用模拟数据:', realError);
+        metrics = await getSimulatedMetrics(env);
+      }
+    } else {
+      // 使用模拟数据
+      metrics = await getSimulatedMetrics(env);
+    }
+    
+    return new Response(JSON.stringify(metrics), {
       headers: {
         "content-type": "application/json;charset=UTF-8",
         "Access-Control-Allow-Origin": "*"
@@ -21,7 +38,8 @@ export async function onRequestGet(context) {
     // 如果获取真实数据失败，返回错误信息
     return new Response(JSON.stringify({
       error: "无法获取监控数据",
-      message: error.message
+      message: error.message,
+      timestamp: new Date().toISOString()
     }), {
       status: 500,
       headers: {
@@ -33,11 +51,9 @@ export async function onRequestGet(context) {
 }
 
 /**
- * 获取真实的 EdgeOne 监控数据
- * 这里需要替换为实际的 EdgeOne API 调用
+ * 获取模拟的 EdgeOne 监控数据
  */
-async function getRealEdgeOneMetrics(env) {
-  // 模拟从 EdgeOne API 获取真实数据
+async function getSimulatedMetrics(env) {
   const now = new Date();
   const baseTime = now.getTime();
   
@@ -72,56 +88,7 @@ async function getRealEdgeOneMetrics(env) {
     totalRequests: totalRequests,
     
     timestamp: now.toISOString(),
-    dataSource: "edgeone-simulated", // 标记为模拟数据，实际使用时改为 "edgeone-real"
-    metrics: {
-      bandwidthUnit: "Mbps",
-      trafficUnit: "GB",
-      cacheHitRateUnit: "%"
-    }
-  };
-}
-
-/**
- * 实际的 EdgeOne API 调用函数（需要配置）
- */
-async function fetchRealEdgeOneMetrics(apiKey, siteId) {
-  // 实际实现示例：
-  /*
-  const response = await fetch(`https://api.edgeone.ai/v1/sites/${siteId}/metrics`, {
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  
-  if (!response.ok) {
-    throw new Error(`EdgeOne API error: ${response.status}`);
-  }
-  
-  const data = await response.json();
-  return processEdgeOneMetrics(data);
-  */
-  
-  // 暂时返回模拟数据
-  return getRealEdgeOneMetrics();
-}
-
-/**
- * 处理 EdgeOne API 返回的原始数据
- */
-function processEdgeOneMetrics(rawData) {
-  // 根据 EdgeOne API 返回的数据结构进行处理
-  // 这里需要根据实际的 API 响应格式来解析
-  
-  return {
-    bandwidth: rawData.bandwidth || 0,
-    todayTraffic: rawData.todayTraffic || 0,
-    todayRequests: rawData.todayRequests || 0,
-    totalTraffic: rawData.totalTraffic || 0,
-    totalRequests: rawData.totalRequests || 0,
-    cacheHitRate: rawData.cacheHitRate || 0,
-    timestamp: new Date().toISOString(),
-    dataSource: "edgeone-real",
+    dataSource: env.EDGEONE_SECRET_ID ? "edgeone-simulated" : "simulated-no-config",
     metrics: {
       bandwidthUnit: "Mbps",
       trafficUnit: "GB",
