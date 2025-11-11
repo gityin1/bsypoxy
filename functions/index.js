@@ -11,10 +11,17 @@
  */
 export async function onRequestGet(context) {
   const { request } = context;
-
+  
   // Return the main HTML page
   const html = `
-  
+
+
+
+
+
+
+
+
 
 
 
@@ -629,9 +636,16 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
 
 
 
-  
-  
-  `;
+
+
+
+
+
+
+
+
+
+`;
 
   return new Response(html, {
     headers: {
@@ -648,7 +662,7 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
  */
 export async function onRequest(context) {
   const { request } = context;
-
+  
   // For non-GET requests, return JSON
   if (request.method !== 'GET') {
     return new Response(JSON.stringify({
@@ -666,7 +680,7 @@ export async function onRequest(context) {
       }
     });
   }
-
+  
   // For GET requests, call the HTML handler
   return onRequestGet(context);
 }
