@@ -13,7 +13,12 @@ export async function onRequestGet(context) {
   const { request } = context;
 
   // Return the main HTML page
-  const html = `<!DOCTYPE html>
+  const html = `
+  
+
+
+
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -370,7 +375,24 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
         setInterval(updateTime, 60000);
     </script>
 </body>
-</html>`;
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  `;
 
   return new Response(html, {
     headers: {
