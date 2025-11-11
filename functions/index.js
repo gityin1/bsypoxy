@@ -299,6 +299,7 @@ export async function onRequestGet(context) {
             cursor: pointer;
             font-size: 0.9rem;
             margin-top: 10px;
+            margin-right: 10px;
             transition: background 0.3s;
         }
         
@@ -306,11 +307,146 @@ export async function onRequestGet(context) {
             background: #2563eb;
         }
         
+        .control-button {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        
+        .control-button:hover {
+            background: #4b5563;
+        }
+        
         .last-updated {
             text-align: right;
             color: #6b7280;
             font-size: 0.8rem;
             margin-top: 10px;
+        }
+        
+        /* 控制面板样式 */
+        .control-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 2px solid #e5e7eb;
+            display: none;
+        }
+        
+        .control-panel.active {
+            display: block;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .control-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .control-group h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .control-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .control-label {
+            width: 150px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .control-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .control-slider {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .control-value {
+            width: 60px;
+            text-align: right;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #10b981;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .control-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
@@ -335,6 +471,21 @@ export async function onRequestGet(context) {
                 width: 100%;
                 margin-right: 0;
                 text-align: center;
+            }
+            
+            .control-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .control-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .control-input, .control-slider {
+                min-width: 100%;
+                margin-bottom: 5px;
             }
         }
     </style>
@@ -400,8 +551,101 @@ export async function onRequestGet(context) {
             <button class="refresh-button" onclick="refreshMetrics()">
                 🔄 刷新数据
             </button>
+            <button class="control-button" onclick="toggleControlPanel()">
+                ⚙️ 控制面板
+            </button>
             <div class="last-updated">
                 最后更新: <span id="last-updated-time">--</span>
+            </div>
+        </div>
+        
+        <!-- 控制面板 -->
+        <div class="control-panel" id="control-panel">
+            <h2>🎛️ 监控控制面板</h2>
+            
+            <div class="control-group">
+                <h3>数据模拟设置</h3>
+                
+                <div class="control-row">
+                    <span class="control-label">带宽基准值 (Mbps)</span>
+                    <input type="range" min="10" max="1000" value="300" class="control-slider" id="bandwidth-base">
+                    <span class="control-value" id="bandwidth-base-value">300</span>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">流量基准值 (GB)</span>
+                    <input type="range" min="1" max="100" value="25" class="control-slider" id="traffic-base">
+                    <span class="control-value" id="traffic-base-value">25</span>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">请求基准值 (万)</span>
+                    <input type="range" min="1" max="50" value="15" class="control-slider" id="requests-base">
+                    <span class="control-value" id="requests-base-value">15</span>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">缓存命中率 (%)</span>
+                    <input type="range" min="50" max="99" value="85" class="control-slider" id="cache-base">
+                    <span class="control-value" id="cache-base-value">85</span>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>数据波动设置</h3>
+                
+                <div class="control-row">
+                    <span class="control-label">数据波动幅度</span>
+                    <input type="range" min="5" max="50" value="20" class="control-slider" id="fluctuation-level">
+                    <span class="control-value" id="fluctuation-level-value">20%</span>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">模拟数据刷新频率</span>
+                    <select class="control-input" id="refresh-frequency">
+                        <option value="300000">5分钟</option>
+                        <option value="60000">1分钟</option>
+                        <option value="30000">30秒</option>
+                        <option value="10000">10秒</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>功能开关</h3>
+                
+                <div class="control-row">
+                    <span class="control-label">自动刷新数据</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="auto-refresh" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">显示趋势箭头</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="show-trends" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">启用数据模拟</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="enable-simulation" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="control-actions">
+                <button class="control-button" onclick="resetControls()">
+                    🔄 恢复默认
+                </button>
+                <button class="refresh-button" onclick="applyControls()">
+                    ✅ 应用设置
+                </button>
             </div>
         </div>
         
@@ -515,6 +759,21 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
     </div>
 
     <script>
+        // 控制变量配置
+        const config = {
+            bandwidthBase: 300,
+            trafficBase: 25,
+            requestsBase: 15,
+            cacheBase: 85,
+            fluctuationLevel: 20,
+            refreshFrequency: 300000, // 5分钟
+            autoRefresh: true,
+            showTrends: true,
+            enableSimulation: true
+        };
+        
+        let refreshInterval;
+
         // 更新时间
         function updateTime() {
             const timeElement = document.getElementById('current-time');
@@ -531,12 +790,22 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
 
         // 流量监控功能
         function generateMockMetrics() {
-            // 模拟数据生成 - 实际使用时需要替换为真实的API调用
+            if (!config.enableSimulation) {
+                return {
+                    bandwidth: 0,
+                    traffic: 0,
+                    requests: 0,
+                    cacheHitRate: 0
+                };
+            }
+            
+            const fluctuation = config.fluctuationLevel / 100;
+            
             return {
-                bandwidth: (Math.random() * 500 + 50).toFixed(1),
-                traffic: (Math.random() * 50 + 10).toFixed(1),
-                requests: Math.floor(Math.random() * 100000 + 50000).toLocaleString(),
-                cacheHitRate: (Math.random() * 20 + 80).toFixed(1)
+                bandwidth: (config.bandwidthBase * (1 + (Math.random() - 0.5) * fluctuation)).toFixed(1),
+                traffic: (config.trafficBase * (1 + (Math.random() - 0.5) * fluctuation)).toFixed(1),
+                requests: Math.floor(config.requestsBase * 10000 * (1 + (Math.random() - 0.5) * fluctuation)).toLocaleString(),
+                cacheHitRate: Math.max(50, Math.min(99, (config.cacheBase * (1 + (Math.random() - 0.5) * fluctuation / 2)))).toFixed(1)
             };
         }
 
@@ -548,6 +817,19 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
             document.getElementById('traffic-value').textContent = `${metrics.traffic} GB`;
             document.getElementById('requests-value').textContent = metrics.requests;
             document.getElementById('cache-value').textContent = `${metrics.cacheHitRate}%`;
+            
+            // 更新趋势显示
+            if (config.showTrends) {
+                document.getElementById('bandwidth-trend').style.display = 'block';
+                document.getElementById('traffic-trend').style.display = 'block';
+                document.getElementById('requests-trend').style.display = 'block';
+                document.getElementById('cache-trend').style.display = 'block';
+            } else {
+                document.getElementById('bandwidth-trend').style.display = 'none';
+                document.getElementById('traffic-trend').style.display = 'none';
+                document.getElementById('requests-trend').style.display = 'none';
+                document.getElementById('cache-trend').style.display = 'none';
+            }
             
             // 更新最后刷新时间
             document.getElementById('last-updated-time').textContent = new Date().toLocaleString('zh-CN');
@@ -569,6 +851,121 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
                 // 显示更新成功提示
                 showToast('数据更新成功！');
             }, 800);
+        }
+
+        function toggleControlPanel() {
+            const panel = document.getElementById('control-panel');
+            panel.classList.toggle('active');
+        }
+
+        function setupControlListeners() {
+            // 滑块控制
+            document.getElementById('bandwidth-base').addEventListener('input', function() {
+                config.bandwidthBase = parseInt(this.value);
+                document.getElementById('bandwidth-base-value').textContent = this.value;
+            });
+            
+            document.getElementById('traffic-base').addEventListener('input', function() {
+                config.trafficBase = parseInt(this.value);
+                document.getElementById('traffic-base-value').textContent = this.value;
+            });
+            
+            document.getElementById('requests-base').addEventListener('input', function() {
+                config.requestsBase = parseInt(this.value);
+                document.getElementById('requests-base-value').textContent = this.value;
+            });
+            
+            document.getElementById('cache-base').addEventListener('input', function() {
+                config.cacheBase = parseInt(this.value);
+                document.getElementById('cache-base-value').textContent = this.value;
+            });
+            
+            document.getElementById('fluctuation-level').addEventListener('input', function() {
+                config.fluctuationLevel = parseInt(this.value);
+                document.getElementById('fluctuation-level-value').textContent = this.value + '%';
+            });
+            
+            // 下拉选择
+            document.getElementById('refresh-frequency').addEventListener('change', function() {
+                config.refreshFrequency = parseInt(this.value);
+                setupAutoRefresh();
+            });
+            
+            // 开关控制
+            document.getElementById('auto-refresh').addEventListener('change', function() {
+                config.autoRefresh = this.checked;
+                setupAutoRefresh();
+            });
+            
+            document.getElementById('show-trends').addEventListener('change', function() {
+                config.showTrends = this.checked;
+                updateMetricsDisplay();
+            });
+            
+            document.getElementById('enable-simulation').addEventListener('change', function() {
+                config.enableSimulation = this.checked;
+                updateMetricsDisplay();
+            });
+        }
+
+        function setupAutoRefresh() {
+            // 清除现有定时器
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            
+            // 如果启用自动刷新，设置新的定时器
+            if (config.autoRefresh) {
+                refreshInterval = setInterval(refreshMetrics, config.refreshFrequency);
+            }
+        }
+
+        function applyControls() {
+            // 应用设置
+            setupAutoRefresh();
+            updateMetricsDisplay();
+            showToast('控制设置已应用！');
+            
+            // 可选：关闭控制面板
+            document.getElementById('control-panel').classList.remove('active');
+        }
+
+        function resetControls() {
+            // 重置为默认值
+            config.bandwidthBase = 300;
+            config.trafficBase = 25;
+            config.requestsBase = 15;
+            config.cacheBase = 85;
+            config.fluctuationLevel = 20;
+            config.refreshFrequency = 300000;
+            config.autoRefresh = true;
+            config.showTrends = true;
+            config.enableSimulation = true;
+            
+            // 更新UI控件
+            document.getElementById('bandwidth-base').value = config.bandwidthBase;
+            document.getElementById('bandwidth-base-value').textContent = config.bandwidthBase;
+            
+            document.getElementById('traffic-base').value = config.trafficBase;
+            document.getElementById('traffic-base-value').textContent = config.trafficBase;
+            
+            document.getElementById('requests-base').value = config.requestsBase;
+            document.getElementById('requests-base-value').textContent = config.requestsBase;
+            
+            document.getElementById('cache-base').value = config.cacheBase;
+            document.getElementById('cache-base-value').textContent = config.cacheBase;
+            
+            document.getElementById('fluctuation-level').value = config.fluctuationLevel;
+            document.getElementById('fluctuation-level-value').textContent = config.fluctuationLevel + '%';
+            
+            document.getElementById('refresh-frequency').value = config.refreshFrequency;
+            document.getElementById('auto-refresh').checked = config.autoRefresh;
+            document.getElementById('show-trends').checked = config.showTrends;
+            document.getElementById('enable-simulation').checked = config.enableSimulation;
+            
+            // 应用重置的设置
+            applyControls();
+            showToast('已恢复默认设置！');
         }
 
         function showToast(message) {
@@ -613,17 +1010,20 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
         `;
         document.head.appendChild(style);
 
-        // 页面加载时初始化指标显示
+        // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 设置控制监听器
+            setupControlListeners();
+            
+            // 初始化指标显示
             updateMetricsDisplay();
             
-            // 每5分钟自动刷新一次数据
-            setInterval(updateMetricsDisplay, 5 * 60 * 1000);
+            // 设置自动刷新
+            setupAutoRefresh();
         });
     </script>
 </body>
 </html>
-
 
 
 
