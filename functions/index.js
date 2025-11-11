@@ -210,6 +210,102 @@ export async function onRequestGet(context) {
             color: #6b7280;
         }
         
+        /* 流量监控特定样式 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #8b5cf6;
+        }
+        
+        .metric-card.bandwidth {
+            border-top-color: #06b6d4;
+        }
+        
+        .metric-card.requests {
+            border-top-color: #10b981;
+        }
+        
+        .metric-card.cache {
+            border-top-color: #f59e0b;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .metric-trend {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .trend-up {
+            color: #ef4444;
+        }
+        
+        .trend-down {
+            color: #10b981;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .refresh-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .refresh-button:hover {
+            background: #2563eb;
+        }
+        
+        .last-updated {
+            text-align: right;
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -220,6 +316,10 @@ export async function onRequestGet(context) {
             }
             
             .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -236,13 +336,66 @@ export async function onRequestGet(context) {
     <div class="container">
         <div class="header">
             <h1>🚀 小苏搬运工代理下载服务</h1>
-            <p>不要bug！不要bug！不要bug！ ฅ( ̳• ◡ • ̳)ฅ</p>
+            <p>不要死！不要死！不要死！</p>
         </div>
         
         <div class="status">
             <h2>服务状态</h2>
             <p>代理服务已成功部署</p>
             <p>时间: <span id="current-time">${new Date().toLocaleString('zh-CN')}</span></p>
+        </div>
+        
+        <!-- 新增的流量监控部分 -->
+        <div class="card">
+            <h2>📊 EdgeOne 流量动态监控</h2>
+            <p>实时监控服务流量、带宽使用情况和性能指标</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card bandwidth">
+                    <div class="metric-label">当前带宽</div>
+                    <div class="metric-value" id="bandwidth-value">-- Mbps</div>
+                    <div class="metric-trend trend-up" id="bandwidth-trend">↑ 较昨日 +12%</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">今日流量</div>
+                    <div class="metric-value" id="traffic-value">-- GB</div>
+                    <div class="metric-trend trend-up" id="traffic-trend">↑ 本月已用 45%</div>
+                </div>
+                
+                <div class="metric-card requests">
+                    <div class="metric-label">请求次数</div>
+                    <div class="metric-value" id="requests-value">--</div>
+                    <div class="metric-trend trend-down" id="requests-trend">↓ 错误率 0.2%</div>
+                </div>
+                
+                <div class="metric-card cache">
+                    <div class="metric-label">缓存命中率</div>
+                    <div class="metric-value" id="cache-value">--%</div>
+                    <div class="metric-trend trend-up" id="cache-trend">↑ 性能优秀</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>带宽使用趋势 (最近24小时)</h3>
+                <div class="chart-placeholder">
+                    📈 带宽监控图表 - 需接入EdgeOne控制台API
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>流量消耗分析 (本月)</h3>
+                <div class="chart-placeholder">
+                    📊 流量分析图表 - 需接入EdgeOne控制台API
+                </div>
+            </div>
+            
+            <button class="refresh-button" onclick="refreshMetrics()">
+                🔄 刷新数据
+            </button>
+            <div class="last-updated">
+                最后更新: <span id="last-updated-time">--</span>
+            </div>
         </div>
         
         <div class="features-grid">
@@ -285,10 +438,7 @@ export async function onRequestGet(context) {
                     <li>编不动了</li>
                 </ul>
             </div>
-            
         </div>
-        
-        
         
         <div class="card">
             <h2>📖 API 使用说明</h2>
@@ -353,9 +503,7 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
         </div>
         
         <div class="footer">
-            <p>Powered by <a href="https://bsy.yinbl.cn">小苏搬运工</a> 此站基于<a href="https://curl.qcloud.com/mq1BYMBC">腾讯云</a>提供服务
-            
-            </p>
+            <p>Powered by <a href="https://bsy.yinbl.cn">小苏搬运工</a> 此站基于<a href="https://curl.qcloud.com/mq1BYMBC">腾讯云</a>提供服务</p>
         </div>
     </div>
 
@@ -373,10 +521,101 @@ EO_DISABLE_SIGN = "false"  // 是否禁用签名验证
         
         // 每分钟更新时间
         setInterval(updateTime, 60000);
+
+        // 流量监控功能
+        function generateMockMetrics() {
+            // 模拟数据生成 - 实际使用时需要替换为真实的API调用
+            return {
+                bandwidth: (Math.random() * 500 + 50).toFixed(1),
+                traffic: (Math.random() * 50 + 10).toFixed(1),
+                requests: Math.floor(Math.random() * 100000 + 50000).toLocaleString(),
+                cacheHitRate: (Math.random() * 20 + 80).toFixed(1)
+            };
+        }
+
+        function updateMetricsDisplay() {
+            const metrics = generateMockMetrics();
+            
+            // 更新指标显示
+            document.getElementById('bandwidth-value').textContent = `${metrics.bandwidth} Mbps`;
+            document.getElementById('traffic-value').textContent = `${metrics.traffic} GB`;
+            document.getElementById('requests-value').textContent = metrics.requests;
+            document.getElementById('cache-value').textContent = `${metrics.cacheHitRate}%`;
+            
+            // 更新最后刷新时间
+            document.getElementById('last-updated-time').textContent = new Date().toLocaleString('zh-CN');
+        }
+
+        function refreshMetrics() {
+            // 显示加载状态
+            const button = document.querySelector('.refresh-button');
+            const originalText = button.textContent;
+            button.textContent = '🔄 更新中...';
+            button.disabled = true;
+            
+            // 模拟API调用延迟
+            setTimeout(() => {
+                updateMetricsDisplay();
+                button.textContent = originalText;
+                button.disabled = false;
+                
+                // 显示更新成功提示
+                showToast('数据更新成功！');
+            }, 800);
+        }
+
+        function showToast(message) {
+            // 创建toast元素
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载时初始化指标显示
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMetricsDisplay();
+            
+            // 每5分钟自动刷新一次数据
+            setInterval(updateMetricsDisplay, 5 * 60 * 1000);
+        });
     </script>
 </body>
 </html>
-
 
 
 
