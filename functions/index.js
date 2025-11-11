@@ -300,7 +300,7 @@ export async function onRequestGet(context) {
                 <span class="endpoint-method">GET</span>
                 <code>/{文件路径}?sign={签名}</code>
                 <div style="margin-top: 8px; color: #64748b;">
-         想使用加速先正常获取下载连接，去掉/d包含d并加上本网站即可
+         想使用加速先正常获取下载连接，只要FX后面一串包含FX加上本网站即可
                 </div>
             </div>
             
