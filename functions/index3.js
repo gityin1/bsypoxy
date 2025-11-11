@@ -3,6 +3,7 @@
  * This handles requests to the root "/" path
  */
 
+
 /**
  * Handle GET requests to root path
  * @param {object} context - EdgeOne Pages context
