@@ -236,7 +236,7 @@ export async function onRequestGet(context) {
     <div class="container">
         <div class="header">
             <h1>🚀 小苏搬运工代理下载服务</h1>
-            <p>不要死！不要死！不要死！</p>
+            <p>不要bug！不要bug！不要bug！ ฅ( ̳• ◡ • ̳)ฅ</p>
         </div>
         
         <div class="status">
