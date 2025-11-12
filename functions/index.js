@@ -26,7 +26,7 @@ export async function onRequestGet(context) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小苏搬运工代理下载服务</title>
+    <title>小苏搬运工全球代理下载服务</title>
     <style>
         * {
             margin: 0;
@@ -252,10 +252,10 @@ export async function onRequestGet(context) {
             <div class="feature edgeone">
                 <h3>🌍 独特优势</h3>
                 <ul>
-                    <li>全球 3200+ 边缘节点分布式部署</li>
+                    <li>全球边缘节点分布式部署</li>
                     <li>超低延迟访问体验</li>
                     <li>弹性扩容，自动负载均衡</li>
-                    <li>Serverless 架构，免运维</li>
+                    <li>布吉岛架构，免运维</li>
                 </ul>
             </div>
             
