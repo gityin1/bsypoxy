@@ -2,7 +2,7 @@
   "name": "openlist-proxy-edgeone",
   "version": "2.0.0",
   "description": "OpenList proxy service for EdgeOne Pages with real-time monitoring and optimization",
-  "main": "functions/index.js",
+  "main": "functions/[[path]].js",
   "type": "module",
   "scripts": {
     "dev": "edgeone pages dev",
