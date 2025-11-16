@@ -1,4 +1,6 @@
 messages:
   - role: user
-    content: 能加个监控请求次数吗？
+    content: |-
+      能加个监控请求次数吗？
+      能合并在ai分支吗？
 model: openai/gpt-4o
