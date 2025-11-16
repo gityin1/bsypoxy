@@ -10,7 +10,7 @@ compatibility_date = "2024-01-15"
 [build.upload]
   format = "modules"
   dir = "functions"
-  main = "./functions/api/[[path]].js"
+  main = "./functions/[[path]].js"
 
 # 路由配置 - 确保监控端点可访问
 [[routes]]
