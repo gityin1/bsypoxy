@@ -3,7 +3,9 @@ name: Summarize new issues
 on:
   issues:
     types: [opened]
-
+  pull_request:
+    branches: 
+      - main
 jobs:
   summary:
     runs-on: ubuntu-latest
