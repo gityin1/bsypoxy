@@ -10,7 +10,7 @@ compatibility_date = "2024-01-15"
 [build.upload]
   format = "modules"
   dir = "functions"
-  main = "./functions/[[path]].js"
+  main = "./functions/api/[[path]].js"
 
 # 路由配置 - 确保监控端点可访问
 [[routes]]
@@ -20,12 +20,12 @@ compatibility_date = "2024-01-15"
     cache = false
 
 [[routes]]
-  pattern = "/*"
+  pattern = "/api/*"
   methods = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"]
 
 # 基础头部配置
 [[headers]]
-  for = "/*"
+  for = "/api/*"
   [headers.values]
     "X-Frame-Options" = "DENY"
     "X-Content-Type-Options" = "nosniff"
