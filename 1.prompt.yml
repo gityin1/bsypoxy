@@ -1,0 +1,4 @@
+messages:
+  - role: user
+    content: 能加个监控请求次数吗？
+model: openai/gpt-4o
