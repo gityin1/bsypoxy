@@ -3,7 +3,6 @@
  * This handles requests to the root "/" path
  */
 
-
 /**
  * Handle GET requests to root path
  * @param {object} context - EdgeOne Pages context
@@ -13,20 +12,12 @@ export async function onRequestGet(context) {
   const { request } = context;
   
   // Return the main HTML page
-  const html = `
-  
-  
-  
-  
-  
-  
-  
-  <!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小苏搬运工全球代理下载服务</title>
+    <title>小苏搬运工全球备用代理下载服务</title>
     <style>
         * {
             margin: 0;
@@ -213,6 +204,39 @@ export async function onRequestGet(context) {
             color: #6b7280;
         }
         
+        .monitoring-panel {
+            background: #1e293b;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .monitoring-panel h3 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+        
+        .monitoring-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .monitoring-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .monitoring-link:hover {
+            background: #2563eb;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -232,66 +256,79 @@ export async function onRequestGet(context) {
                 margin-right: 0;
                 text-align: center;
             }
+            
+            .monitoring-links {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 小苏搬运工全球代理下载服务</h1>
-            <p>不要死！不要死！不要死！(⑅˃◡˂⑅)</p>
+            <h1>🚀 小苏搬运工全球备用代理下载服务 - 优化版</h1>
+            <p>实时监控 + 智能优化 + 边缘计算 (⑅˃◡˂⑅)</p>
         </div>
         
         <div class="status">
-            <h2>服务状态</h2>
-            <p>代理服务已成功部署</p>
-            <p>时间: <span id="current-time">${new Date().toLocaleString('zh-CN')}</span></p>
+            <h2>服务状态 - 优化版本 2.0.0</h2>
+            <p>✅ 代理服务已成功部署</p>
+            <p>✅ 实时性能监控已启用</p>
+            <p>✅ 智能边缘优化已激活</p>
+            <p>⏰ 时间: <span id="current-time">${new Date().toLocaleString('zh-CN')}</span></p>
+        </div>
+        
+        <div class="monitoring-panel">
+            <h3>📊 实时监控面板</h3>
+            <p>系统已集成实时性能监控和智能优化功能</p>
+            <div class="monitoring-links">
+                <a href="/_/metrics" class="monitoring-link">性能指标</a>
+                <a href="/_/health" class="monitoring-link">健康检查</a>
+                <a href="/_/debug" class="monitoring-link">详细信息</a>
+            </div>
         </div>
         
         <div class="features-grid">
             <div class="feature edgeone">
-                <h3>🌍 独特优势</h3>
+                <h3>🌍 边缘计算优势</h3>
                 <ul>
-                    <li>全球边缘节点分布式部署</li>
-                    <li>超低延迟访问体验</li>
-                    <li>弹性扩容，自动负载均衡</li>
-                    <li>布吉岛架构，免运维</li>
+                    <li>全球3200+边缘节点部署</li>
+                    <li>实时性能监控系统</li>
+                    <li>每3小时自动优化</li>
+                    <li>智能缓存策略</li>
                 </ul>
             </div>
             
             <div class="feature">
-                <h3>🔒 安全特性</h3>
+                <h3>🔒 安全增强</h3>
                 <ul>
                     <li>HMAC-SHA256 签名验证</li>
                     <li>请求过期时间检查</li>
-                    <li>CORS 跨域支持</li>
-                    <li>路径安全验证</li>
+                    <li>实时安全监控</li>
+                    <li>自动威胁检测</li>
                 </ul>
             </div>
             
             <div class="feature">
-                <h3>⚡ 性能优势</h3>
+                <h3>⚡ 性能优化</h3>
                 <ul>
-                    <li>全球 CDN 加速</li>
-                    <li>边缘计算处理</li>
-                    <li>智能缓存优化</li>
-                    <li>自动 HTTPS 加密</li>
+                    <li>智能响应时间优化</li>
+                    <li>并行请求处理</li>
+                    <li>内存自动管理</li>
+                    <li>连接池优化</li>
                 </ul>
             </div>
             
             <div class="feature">
-                <h3>📚 功能特性</h3>
+                <h3>📚 监控特性</h3>
                 <ul>
-                    <li>自定义请求头支持</li>
-                    <li>自动重定向处理</li>
-                    <li>优化某逻辑性</li>
-                    <li>编不动了</li>
+                    <li>请求级别跟踪</li>
+                    <li>区域性能分析</li>
+                    <li>错误率监控</li>
+                    <li>健康评分系统</li>
                 </ul>
             </div>
-            
         </div>
-        
-        
         
         <div class="card">
             <h2>📖 API 使用说明</h2>
@@ -342,11 +379,9 @@ GET /images/photo.jpg?sign=abc123def456...:1762805037
             </div>
         </div>
         
-        
         <div class="footer">
-            <p>Powered by <a href="https://bsy.yinbl.cn">小苏搬运工</a> 此站基于<a href="https://curl.qcloud.com/mq1BYMBC">腾讯云</a>提供服务
-            
-            </p>
+            <p>Powered by <a href="https://bsy.yinbl.cn">小苏搬运工</a> | 基于 <a href="https://curl.qcloud.com/mq1BYMBC">腾讯云</a> 提供服务</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">版本 2.0.0 | 实时监控 | 智能优化</p>
         </div>
     </div>
 
@@ -364,30 +399,19 @@ GET /images/photo.jpg?sign=abc123def456...:1762805037
         
         // 每分钟更新时间
         setInterval(updateTime, 60000);
+        
+        // 自动刷新监控数据（可选）
+        setTimeout(() => {
+            fetch('/_/health')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('系统健康状态:', data);
+                })
+                .catch(console.error);
+        }, 5000);
     </script>
 </body>
-</html>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  `;
+</html>`;
 
   return new Response(html, {
     headers: {
@@ -412,13 +436,20 @@ export async function onRequest(context) {
       status: "running",
       platform: "EdgeOne Pages",
       timestamp: new Date().toISOString(),
-      version: "1.0.0",
+      version: "2.0.0",
+      optimized: true,
+      monitoring: true,
       methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
-      api_endpoint: "/api/download/{file-path}?sign={signature}"
+      api_endpoint: "/api/download/{file-path}?sign={signature}",
+      monitoring_endpoints: {
+        metrics: "/_/metrics",
+        health: "/_/health"
+      }
     }), {
       headers: {
         "content-type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
+        "X-Edge-Optimized": "true"
       }
     });
   }

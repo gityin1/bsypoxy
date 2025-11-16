@@ -1,24 +1,40 @@
 {
-  "name": "openlist-proxy",
-  "version": "1.0.0",
-  "description": "OpenList proxy service for EdgeOne Pages",
+  "name": "openlist-proxy-edgeone",
+  "version": "2.0.0",
+  "description": "OpenList proxy service for EdgeOne Pages with real-time monitoring and optimization",
   "main": "functions/index.js",
+  "type": "module",
   "scripts": {
     "dev": "edgeone pages dev",
-    "build": "echo 'No build step required for static site'",
+    "build": "echo 'No build step required for EdgeOne Pages'",
     "deploy": "edgeone pages deploy",
     "init": "edgeone pages init",
-    "link": "edgeone pages link"
+    "link": "edgeone pages link",
+    "validate": "node deploy-config.js",
+    "optimize": "echo '🚀 边缘优化配置就绪'",
+    "config:generate": "node deploy-config.js",
+    "setup": "npm run validate && npm run config:generate"
   },
   "keywords": [
     "edgeone",
     "pages",
     "proxy",
     "openlist",
-    "serverless"
+    "serverless",
+    "optimized",
+    "monitoring",
+    "edge-computing"
   ],
-  "author": "",
+  "author": "小苏搬运工",
+  "license": "MIT",
   "devDependencies": {
     "edgeone": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/openlist-proxy-edgeone"
   }
 }

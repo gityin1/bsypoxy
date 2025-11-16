@@ -6,7 +6,7 @@
 
 本项目旨在为 OpenList 提供一个高可用、低延迟的代理服务，适用于需要通过边缘节点加速文件分发、API 代理等场景。依托 EdgeOne Pages Functions，无需自建服务器即可实现弹性扩展和全球加速。
 
-本项目参考了 [Wodlie](https://github.com/Wodlie/openlist-proxy-edgeone) 修改了一小部分。
+本项目参考了 [OpenList-Proxy](https://github.com/OpenListTeam/OpenList-Proxy) 的设计与实现，结合 EdgeOne Pages 的特性进行了优化。
 
 
 ## 目录结构

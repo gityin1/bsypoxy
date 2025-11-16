@@ -3,88 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenList Proxy</title>
+    <title>小苏搬运工全球代理下载服务 - 静态版本</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            line-height: 1.6;
+            color: #333;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: white;
+            padding: 20px;
         }
+        
         .container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
-        h1 {
+        
+        .header {
             text-align: center;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
         }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #6b7280;
+        }
+        
         .status {
             text-align: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            background: #ecfdf5;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 6px solid #10b981;
+        }
+        
+        .status h2 {
+            color: #065f46;
+            margin-bottom: 15px;
+        }
+        
+        .status p {
+            margin-bottom: 10px;
+            color: #047857;
+        }
+        
+        .info {
+            text-align: center;
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 6px solid #3b82f6;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .redirect-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
             border-radius: 8px;
-            margin: 1rem 0;
+            font-weight: 600;
+            margin: 10px;
+            transition: background 0.3s;
         }
-        .feature {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            border-left: 4px solid #4CAF50;
-        }
-        .warning {
-            background: rgba(255, 193, 7, 0.2);
-            border-left-color: #FFC107;
-            color: #FFF3CD;
-        }
-        code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
+        
+        .redirect-button:hover {
+            background: #2563eb;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 OpenList Proxy</h1>
+        <div class="header">
+            <h1>🚀 小苏搬运工全球代理下载服务</h1>
+            <p>静态版本 - 请使用 EdgeOne Pages Functions 版本</p>
+        </div>
         
         <div class="status">
-            <h2>✅ 服务运行中</h2>
-            <p>OpenList 代理服务已成功部署到 EdgeOne Pages</p>
+            <h2>服务状态</h2>
+            <p>此页面为静态版本，完整功能需要部署到 EdgeOne Pages</p>
+            <p>时间: <span id="current-time">${new Date().toLocaleString('zh-CN')}</span></p>
         </div>
-
-        <div class="feature">
-            <h3>🔒 安全特性</h3>
-            <ul>
-                <li>HMAC-SHA256 签名验证</li>
-                <li>请求过期时间检查</li>
-                <li>CORS 跨域支持</li>
+        
+        <div class="info">
+            <h3>📝 部署说明</h3>
+            <p>此项目需要部署到腾讯云 EdgeOne Pages 才能获得完整功能：</p>
+            <ul style="text-align: left; max-width: 500px; margin: 20px auto;">
+                <li>实时性能监控</li>
+                <li>智能边缘优化</li>
+                <li>全球 CDN 加速</li>
+                <li>自动扩展能力</li>
             </ul>
+            
+            <div style="margin-top: 20px;">
+                <a href="https://curl.qcloud.com/mq1BYMBC" class="redirect-button">🚀 部署到 EdgeOne</a>
+                <a href="https://github.com/your-repo" class="redirect-button">📚 查看文档</a>
+            </div>
         </div>
-
-        <div class="feature">
-            <h3>⚡ 性能优势</h3>
-            <ul>
-                <li>EdgeOne 全球 CDN 加速</li>
-                <li>边缘计算处理</li>
-                <li>自动缓存优化</li>
-            </ul>
-        </div>
-
-        <div class="feature">
-            <h3>📚 使用说明</h3>
-            <p>此服务作为 OpenList 的代理，处理文件下载请求并提供签名验证。</p>
-            <p>API 端点：<code>/api/download/&lt;file-path&gt;?sign=&lt;signature&gt;</code></p>
+        
+        <div class="footer">
+            <p>Powered by <a href="https://bsy.yinbl.cn">小苏搬运工</a> | 基于 <a href="https://curl.qcloud.com/mq1BYMBC">腾讯云 EdgeOne</a></p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">静态版本 | 完整功能需要 EdgeOne Pages</p>
         </div>
     </div>
+
+    <script>
+        // 更新时间
+        function updateTime() {
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.textContent = new Date().toLocaleString('zh-CN');
+            }
+        }
+        
+        // 初始更新时间
+        updateTime();
+        
+        // 每分钟更新时间
+        setInterval(updateTime, 60000);
+    </script>
 </body>
 </html>
